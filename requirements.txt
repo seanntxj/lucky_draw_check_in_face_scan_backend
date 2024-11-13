@@ -1,0 +1,8 @@
+opencv-python
+pandas
+python-dotenv
+tensorflow
+tf_keras
+uvicorn
+fastapi
+deepface
