@@ -23,7 +23,7 @@ def csv_read(file):
 '''
 Takes in the Microsoft Forms csv file and organizes the images into folders based on their employee ID
 '''
-def organize_dataset(images_file_path_root, training_dataset_path_root, csv_file_path):
+def organize_dataset(images_file_path_root, training_dataset_path_root, csv_file_path, name_mapping):
     csv_contents = csv_read(csv_file_path)
     persons = csv_contents[1]
     headers = csv_contents[0]
@@ -40,7 +40,17 @@ def organize_dataset(images_file_path_root, training_dataset_path_root, csv_file
             img_file_path = os.path.join(images_file_path_root, img_file_path)
             img_output_file_name, ext = os.path.splitext(os.path.basename(img_file_path))
 
-            person_dataset_folder_path = os.path.join(training_dataset_path_root, employee_id)
+            # Prepend if any employee id is wrong format
+            if len(employee_id) == 4:
+                employee_id = '0' + employee_id
+
+            # check if person is in name_mapping dictionary
+            if employee_id not in name_mapping:
+                print(f'WARN: {employee_id} NO name')
+                continue    
+
+
+            person_dataset_folder_path = os.path.join(training_dataset_path_root, f'{employee_id}+{name_mapping[employee_id]}')
             if not os.path.exists(person_dataset_folder_path):
                 os.makedirs(person_dataset_folder_path)
             
@@ -66,12 +76,9 @@ def organize_dataset(images_file_path_root, training_dataset_path_root, csv_file
                 img_output_file_name = 'bottom'
 
             if person[i] == '':
-                print(f'WARN: {employee_id}, {person[4]} NO {img_output_file_name}')
+                print(f'WARN: {employee_id} NO {img_output_file_name}')
                 continue    
 
-            if len(employee_id) == 4: 
-                employee_id = "0" + employee_id
-            
             # print(img_file_path)
             save_item = os.path.join(person_dataset_folder_path, img_output_file_name + ext) 
             os.path.exists(os.path.dirname(person_dataset_folder_path))
@@ -90,9 +97,21 @@ if __name__ == "__main__":
     # images_file_path_root = args.images_file_path_root
     # training_dataset_path_root = args.training_dataset_path_root
 
-    csv_file_path = "./forms.csv"
-    images_file_path_root = "./forms_images"
-    training_dataset_path_root = "./forms_images_output"
 
-    organize_dataset(images_file_path_root, training_dataset_path_root, csv_file_path)
+    csv_file_path_forms = "./msforms_organizer_files/forms.csv"
+    images_file_path_root = "./msforms_organizer_files/forms_images"
+    training_dataset_path_root = "./msforms_organizer_files/forms_images_output"
+    csv_file_path_name_mapping = "./msforms_organizer_files/name_mapping.csv"
+
+    # get name mapping
+    raw_csv_output = csv_read(csv_file_path_name_mapping)
+
+    name_mapping = {}
+    for row in raw_csv_output[1]:
+        empid = row[2]
+        name = row[1]
+        name_mapping[empid] = name
+
+    print(name_mapping)
+    organize_dataset(images_file_path_root, training_dataset_path_root, csv_file_path_forms, name_mapping)
     print('Done')
