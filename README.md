@@ -11,9 +11,10 @@ Used in conjunction with [this frontend](https://github.com/seanntxj/lucky_draw_
    `venv\Scripts\activate` if on Windows
    `pip install -r requirements.txt`
 2. Create a folder called `faces` in the same directory as this README.md file.
-3. Populate the folder with faces, folders containing IDs or names.
+3. Populate the folder with faces, folders containing IDs and names in this exact format: `<ID>+<Name>`.
    *You may use multiple images of the same person or less. Naming within doesn't matter.*
-   ![1730104336363](image/README/1730104336363.png)
+
+   ![1731514692131](image/README/1731514692131.png)
 4. Run  `python realtimedemo.py`
    A window will show with a livefeed of your webcam. Point your webcam at a face which is in the folder "faces" should result in the folder name showing.
 5. If there's an error for downloading the weights, manually get `retinaface` and `facenet512` from [here](https://github.com/serengil/deepface_models/releases/tag/v1.0). Place into `C:\Users\<YOURPCUSERNAME>\.deepface\weights`.
