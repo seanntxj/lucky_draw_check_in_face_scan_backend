@@ -16,7 +16,7 @@ load_dotenv()
 
 # Get secret key from .env
 SECRET_KEY = os.getenv('SECRET_KEY')
-FACES_FOLDER_FILE_PATH = 'faces'
+FACES_FOLDER_FILE_PATH = './faces_optimized'
 
 app = FastAPI()
 
@@ -41,7 +41,7 @@ def check_face(frame):
     potential_ids_of_person = []
     try:
         # Using RetinaFace alignment, slower but much more accurate
-        df = DeepFace.find(frame, db_path=FACES_FOLDER_FILE_PATH, silent=True, detector_backend='retinaface', align=True, model_name='Facenet512')
+        df = DeepFace.find(frame, db_path=FACES_FOLDER_FILE_PATH, silent=True, detector_backend='retinaface', align=True, model_name='Facenet512', refresh_database=False)
         
         # No alignment, fast but not as accurate
         # df = DeepFace.find(frame, db_path=FACES_FOLDER_FILE_PATH, silent=True, model_name='Facenet512', threshold=0.3)
