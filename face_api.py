@@ -48,7 +48,11 @@ def check_face(frame):
         try: 
             print(df[0].head(n=10))
             for i in range(len(df[0].head(n=10))):
-                id_of_person = Path(str(df[0].iloc[i].identity)).parts[-2] 
+                try:
+                    id_of_person = Path(str(df[0].iloc[i].identity)).parts[-2] 
+                except IndexError:
+                    # If path doesn't split properly 
+                    id_of_person = str(df[0].iloc[i].identity).split('\\')[-2]
                 if id_of_person not in potential_ids_of_person: potential_ids_of_person.append(id_of_person)
             return potential_ids_of_person
         except Exception as e: 
