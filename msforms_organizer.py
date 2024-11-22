@@ -85,7 +85,7 @@ def organize_dataset(images_file_path_root, training_dataset_path_root, csv_file
             try:
                 shutil.copy(img_file_path, save_item)
             except FileNotFoundError as e:
-                print('Cannot find ' + e.filename)
+                print('Cannot find: ' + img_file_path, e.filename)
 
 if __name__ == "__main__":
     # parser = argparse.ArgumentParser()
