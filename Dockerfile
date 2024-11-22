@@ -9,7 +9,7 @@ RUN mkdir -p /app/data/
 RUN mkdir -p /app/model/
 
 COPY . /app/src/
-COPY /faces_optimized /app/faces_optimized
+COPY /faces_optimized /faces_optimized
 
 RUN pip install --no-cache-dir -r /app/src/requirements.txt
 
