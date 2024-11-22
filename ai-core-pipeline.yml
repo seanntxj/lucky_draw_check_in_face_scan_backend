@@ -1,0 +1,49 @@
+apiVersion: ai.sap.com/v1alpha1
+kind: ServingTemplate
+metadata:
+  name: face-recognition-serve
+  annotations:
+    scenarios.ai.sap.com/description: "Face recognition"
+    scenarios.ai.sap.com/name: "face-recognition"
+    executables.ai.sap.com/description: "Face recognition serving executable"
+    executables.ai.sap.com/name: "server"
+    artifacts.ai.sap.com/facialmodel.kind: "model" # Suggest the kind of artifact to input.
+  labels:
+    scenarios.ai.sap.com/id: "face-recognition"
+    ai.sap.com/version: "16.0.0"
+spec:
+  inputs:
+    artifacts:
+      - name: facialRecognitionModel
+    parameters:
+      - name: greetmessage # placeholder name
+        type: string # required for every parameters
+  template:
+    apiVersion: "serving.kserve.io/v1beta1"
+    metadata:
+      annotations: |
+        autoscaling.knative.dev/metric: concurrency   # condition when to scale
+        autoscaling.knative.dev/target: 1
+        autoscaling.knative.dev/targetBurstCapacity: 0
+      labels: |
+        ai.sap.com/resourcePlan: starter
+    spec: |
+      predictor:
+        imagePullSecrets:
+          - name: credsyk
+        minReplicas: 1
+        maxReplicas: 5    # how much to scale
+        containers:
+        - name: kfserving-container
+          image: "docker.io/seanxjtan/fastapi:initial"
+          ports:
+            - containerPort: 8080    # customizable port
+              protocol: TCP
+          command: ["/bin/sh", "-c"]
+          args:
+            - "python /app/src/face_api.py"
+          env:
+            - name: STORAGE_URI # Required
+              value: "{{inputs.artifacts.facialRecognitionModel}}" # Required reference from artifact name, see above
+            - name: greetingmessage # different name to avoid confusion
+              value: "{{inputs.parameters.greetmessage}}"
