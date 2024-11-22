@@ -9,6 +9,7 @@ RUN mkdir -p /app/data/
 RUN mkdir -p /app/model/
 
 COPY . /app/src/
+COPY /faces_optimized /app/faces_optimized
 
 RUN pip install --no-cache-dir -r /app/src/requirements.txt
 
@@ -17,4 +18,4 @@ RUN chgrp -R 65534 /app && \
 
 EXPOSE 8080
 
-CMD ["python", "face_api.py", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "/app/src/face_api.py", "--host", "0.0.0.0", "--port", "8080"]
