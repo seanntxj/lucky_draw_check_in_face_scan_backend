@@ -2,7 +2,7 @@ import base64
 import os
 from pathlib import Path
 import re
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,10 +12,10 @@ import cv2
 import json
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 # Get secret key from .env
-SECRET_KEY = os.getenv('SECRET_KEY')
+# SECRET_KEY = os.getenv('SECRET_KEY')
 FACES_FOLDER_FILE_PATH = './faces_optimized'
 
 app = FastAPI()
@@ -63,8 +63,12 @@ def check_face(frame):
         return [] # No face detected
 
 @app.get("/")
-def read_root():
-    return {"Wow": SECRET_KEY }
+def base():
+    return "On"
+
+@app.get("/status")
+def status():
+    return "On"
 
 @app.post("/check-face")
 async def check(request: Request):
@@ -96,4 +100,4 @@ async def check(request: Request):
 	
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080)
+    uvicorn.run(app, host="0.0.0.0", port=9001)

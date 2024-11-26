@@ -31,9 +31,9 @@ For use in combination with the [lucky_draw_check_in_app](https://github.com/sea
 - Force the creation of embeddings before running `python face_api.py` (creating the model for face detection). Do this every time new faces have been added with `python create_embeddings.py`.
 - The error `ValueError: Face could not be detected in numpy array.Please confirm that the picture is a face photo or consider to set enforce_detection param to False.` may be ignored. However, if `🔴 Exception while extracting faces from` is seen, it means a face can't be detected in that particular photo.
 - Copy the folder model inside `faces` to another folder such as `faces_optimized`. You are not required to have all the images alongside the model in the production environment.
-![1732020187167](image/README/1732020187167.png)
+  ![1732020187167](image/README/1732020187167.png)
 - Ensure to point the folder folder within `face_api.py` to the correct folder.
-![1732020208928](image/README/1732020208928.png)
+  ![1732020208928](image/README/1732020208928.png)
 
 ### 2. Allowing the endpoints on server
 
@@ -43,7 +43,22 @@ Modify `origins= ["http://localhost:5173", "https://seanntxj.github.io"]` in `fa
 
 To start the server for use with the React + Vite frontend, run `python face_api.py`. By default it'll occupy port `8080`.
 
-
-
 Only one POST request endpoint is exposed, `check-face`. Send a POST request with a JSON body of: `{"image": "<image_encoded_in_base64"}`.
 
+## Docker
+
+### Docker testing locally
+
+1. **Build the docker image**
+   `docker build -t fastapi:initial .`
+2. **Run the docker image locally**
+   `docker run -d --name fastapi-server -p 9001:9001 fastapi:initial`
+
+### Deploying Dockerized server onto Cloud Foundry
+
+0. **Login to Docker Hub**
+   `docker login -u <DockerHubUsername> -p <DockerHubPassword>`
+1. **Tag the local docker image with your Docker Hub username**
+   `docker tag fastapi:initial <DockerHubUsername>/fastapi:initial`
+2. **Push the image to Docker Hub**
+   `docker push <DockerHubUsername>/fastapi:initial`

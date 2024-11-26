@@ -8,14 +8,14 @@ RUN mkdir -p /app/src/
 RUN mkdir -p /app/data/
 RUN mkdir -p /app/model/
 
-COPY . /app/src/
+COPY face_api.py /app/src/
+COPY requirements.txt /app/src/
 COPY /faces_optimized /faces_optimized
 
 RUN pip install --no-cache-dir -r /app/src/requirements.txt
 
-RUN chgrp -R 65534 /app && \
-    chmod -R 777 /app
+RUN chmod -R 777 /app
 
-EXPOSE 8080
+EXPOSE 9001
 
-CMD ["python", "/app/src/face_api.py", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python", "/app/src/face_api.py", "--host", "0.0.0.0", "--port", "9001"]
