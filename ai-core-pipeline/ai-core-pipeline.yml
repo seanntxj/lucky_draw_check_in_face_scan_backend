@@ -37,7 +37,7 @@ spec:
         - name: kfserving-container
           image: "docker.io/juntaiphoon/lucky_draw:01"
           ports:
-            - containerPort: 8080    # customizable port
+            - containerPort: 9001    # customizable port
               protocol: TCP
           command: ["/bin/sh", "-c"]
           args:
