@@ -8,7 +8,7 @@ import cv2
 from deepface import DeepFace
 import threading 
 from pathlib import Path
-from face_api import check_face
+from src.face_api import check_face
 
 # cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 cap = cv2.VideoCapture(0)

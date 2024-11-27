@@ -16,7 +16,7 @@ import json
 
 # Get secret key from .env
 # SECRET_KEY = os.getenv('SECRET_KEY')
-FACES_FOLDER_FILE_PATH = './faces_optimized'
+FACES_FOLDER_FILE_PATH = './src/faces_optimized'
 
 app = FastAPI()
 
