@@ -8,7 +8,7 @@ RUN mkdir -p /app/src/
 RUN mkdir -p /app/data/
 RUN mkdir -p /app/model/
 
-COPY face_api.py /app/src/
+COPY /src /app/src/
 COPY requirements.txt /app/src/
 COPY /faces_optimized /faces_optimized
 
