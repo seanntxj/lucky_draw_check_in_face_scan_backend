@@ -122,13 +122,9 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
 venv.bak/
+venv/
+.venv
 
 # Spyder project settings
 .spyderproject
@@ -163,3 +159,5 @@ cython_debug/
 
 faces/
 msforms_organizer_files/
+*.h5
+*.pkl

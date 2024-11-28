@@ -16,11 +16,12 @@ import json
 
 # Get secret key from .env
 # SECRET_KEY = os.getenv('SECRET_KEY')
-FACES_FOLDER_FILE_PATH = './src/faces_optimized'
+FACES_FOLDER_FILE_PATH = './app/model/'
 
 app = FastAPI()
 
-origins = ["http://localhost:5173", "https://seanntxj.github.io"]
+# origins = ["http://localhost:5173", "https://seanntxj.github.io"]
+origins = ['*']
 
 app.add_middleware(
     CORSMiddleware,

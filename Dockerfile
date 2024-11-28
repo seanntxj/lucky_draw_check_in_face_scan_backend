@@ -2,15 +2,8 @@ FROM python:3.11
 
 RUN apt-get update && apt-get install -y libgl1-mesa-dev
 
-# Creates directory within your Docker image
-RUN mkdir -p /app/src/
-# Placeholder 
-RUN mkdir -p /app/data/
-RUN mkdir -p /app/model/
-
-COPY /src /app/src/
-COPY requirements.txt /app/src/
-COPY /faces_optimized /faces_optimized
+COPY /app /app
+COPY /requirements.txt /app/src/
 
 RUN pip install --no-cache-dir -r /app/src/requirements.txt
 

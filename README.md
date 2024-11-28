@@ -49,10 +49,15 @@ Only one POST request endpoint is exposed, `check-face`. Send a POST request wit
 
 ### Docker testing locally
 
-1. **Build the docker image**
+1. **Prepare files**
+   - Ensure to put the vectorized `.pkl` file into model inside the `app` folder.
+   - Download weights `retinaface.h5` and  `facenet512_weights.h5` inside  `app/.deepface/weights`
+
+     ![1732809417377](image/README/1732809417377.png)
+2. **Build the docker image**
    `docker build -t fastapi:initial .`
-2. **Run the docker image locally**
-   `docker run -d --name fastapi-server -p 9001:9001 fastapi:initial`
+3. **Run the docker image locally**
+   `docker run -d --env-file .env --name fastapi-server -p 9001:9001 fastapi:initial`
 
 ### Deploying Dockerized server onto Cloud Foundry
 
