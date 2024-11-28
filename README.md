@@ -50,9 +50,8 @@ Only one POST request endpoint is exposed, `check-face`. Send a POST request wit
 ### Docker testing locally
 
 1. **Prepare files**
-   - Ensure to put the vectorized `.pkl` file into model inside the `app` folder.
-   - Download weights `retinaface.h5` and  `facenet512_weights.h5` inside  `app/.deepface/weights`
-
+   - Place the vectorized `.pkl` created from `create_embeddings.py` into `app/model` folder.
+   - Download weights `retinaface.h5` and `facenet512_weights.h5` from [here](https://github.com/serengil/deepface_models/releases/tag/v1.0) into `app/.deepface/weights`
      ![1732809417377](image/README/1732809417377.png)
 2. **Build the docker image**
    `docker build -t fastapi:initial .`
