@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
 
-@app.route('/api', methods=['GET'])
+@app.route('/', methods=['GET'])
 def hello():
     return jsonify({"message": "Hello, Network!"})
 
