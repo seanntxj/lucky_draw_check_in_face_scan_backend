@@ -102,4 +102,8 @@ async def check(request: Request):
 if __name__ == "__main__":
     import uvicorn
     print('Deepface home directory:', os.environ['DEEPFACE_HOME'])
-    uvicorn.run(app, host="0.0.0.0", port=9001)
+    uvicorn.run(
+        app, 
+        host="0.0.0.0", 
+        port=9001
+    )
