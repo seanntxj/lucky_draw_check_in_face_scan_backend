@@ -42,7 +42,7 @@ To start the server for use with the React + Vite frontend, run `python app/src/
 ### 3. Test connection with front end
 Using the front end app, insert the link `http://localhost:9001/check-face` into the Settings page and test.
 
-![test_face_scan_local](image/README/test_face_scan_local.png)
+![testing_face_scan_local.png](image/README/testing_face_scan_local.png)
 
 ## Local network set-up
 
