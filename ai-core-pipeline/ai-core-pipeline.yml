@@ -39,7 +39,7 @@ spec:
           ports:
             - containerPort: 9001    # customizable port
               protocol: TCP
-          # command: ["/bin/sh", "-c"]
+          command: ["/bin/sh", "-c"]
           args:
             - "python /app/src/face_api.py"
           env:
