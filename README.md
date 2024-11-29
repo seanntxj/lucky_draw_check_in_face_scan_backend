@@ -23,27 +23,67 @@ Used in conjunction with [this frontend](https://github.com/seanntxj/lucky_draw_
 
 For use in combination with the [lucky_draw_check_in_app](https://github.com/seanntxj/lucky_draw_check_in_app) frontend.
 
-## Typical flow for production use
+## Local device set-up 
+Setup for use if the frontend and face scanning backend service are being run on the same machine. Please follow through all steps here even if you're planning to use a cloud-based or local network solution.
 
 ### 1. Creating embeddings
 
 - Populate the folder "faces" as per the instructions in the quickstart.
-- Force the creation of embeddings before running `python face_api.py` (creating the model for face detection). Do this every time new faces have been added with `python create_embeddings.py`.
-- The error `ValueError: Face could not be detected in numpy array.Please confirm that the picture is a face photo or consider to set enforce_detection param to False.` may be ignored. However, if `🔴 Exception while extracting faces from` is seen, it means a face can't be detected in that particular photo.
-- Copy the folder model inside `faces` to another folder such as `faces_optimized`. You are not required to have all the images alongside the model in the production environment.
-  ![1732020187167](image/README/1732020187167.png)
-- Ensure to point the folder folder within `face_api.py` to the correct folder.
-  ![1732020208928](image/README/1732020208928.png)
+- Run `python create_embeddings.py`.
 
-### 2. Allowing the endpoints on server
+The error `ValueError: Face could not be detected in numpy array.Please confirm that the picture is a face photo or consider to set enforce_detection param to False.` may be ignored. However, if `🔴 Exception while extracting faces from` is seen, it means a face can't be detected in that particular photo.
+- Copy the folder model inside `faces` to `app/model`. You are not required to have all the images alongside the model in the production environment.
+  ![1732020187167](image/README/moving_model_file.png)
 
-Modify `origins= ["http://localhost:5173", "https://seanntxj.github.io"]` in `face_api.py` to reflect your own website. `localhost:5173` should be the default Vite site link unless you've deliberately changed it, in which case you'd need to allow it through here also.
+### 2. Starting the server
 
-### 3. Starting the server
+To start the server for use with the React + Vite frontend, run `python app/src/face_api.py`. By default it'll occupy port `9001`.
 
-To start the server for use with the React + Vite frontend, run `python face_api.py`. By default it'll occupy port `8080`.
+### 3. Test connection with front end
+Using the front end app, insert the link `http://localhost:9001/check-face` into the Settings page and test.
 
-Only one POST request endpoint is exposed, `check-face`. Send a POST request with a JSON body of: `{"image": "<image_encoded_in_base64"}`.
+![test_face_scan_local](image/README/test_face_scan_local.png)
+
+## Local network set-up
+
+### 1. Obtain an SSL certificate
+Either generate or use an already obtained SSL certificate. Generation can be done with OpenSSL if installed `openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout cert.key -out cert.crt`.
+
+Place the `key` and `crt` files in `app/https_certs`
+
+![certs](image/README/certs.png)
+
+This is required to avoid a scenario where browsers block outgoing HTTP traffic. 
+
+### 2. Run the HTTPS flask server
+Use `python app/src/face_api_https.py`.
+
+### 3. Visit the API endpoint on a browser
+Using another device connected on the same local area network, connect to the local area network IP address shown by flask. In my case, it was the second IP address.
+![run_flask](image/README/run_flask.jpeg)
+
+You will likely see a security warning, just proceed to the address.
+![security_risk](image/README/security_risk.png)
+
+After allowing the browser should show this.
+![local_network_testing1](image/README/local_network_testing1.jpeg)
+
+And on the host machine, the console should show a successful connection.
+![local_network_testing2](image/README/local_network_testing2.jpeg)
+
+### 4. Testing the API endpoint on the front end app
+Place the API link into the Settings page of the front end app and test.
+![successful_local_area_network_connection_on_frontend](image/README/successful_local_area_network_connection_on_frontend.png)
+
+### Troubleshooting
+
+- **ERR_CERT_AUTHORITY_INVALID error when using the frontend**
+You have skipped or need to retry step 3.
+![error_due_to_skipping](image/README/error_due_to_skipping.png)
+
+- **I'm using Windows as the host machine, and cannot connect to it**
+You need to allow the ports `9001` (or if you changed it whatever you used) through `Windows Defender Firewall with Advanced Security`
+![allow_firewall_windows](image/README/allow_firewall_windows.jpg)
 
 ## Docker
 
