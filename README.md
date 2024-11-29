@@ -56,7 +56,7 @@ Only one POST request endpoint is exposed, `check-face`. Send a POST request wit
 2. **Build the docker image**
    `docker build -t fastapi:initial .`
 3. **Run the docker image locally**
-   `docker run -d --env-file .env --name fastapi-server -p 9001:9001 fastapi:initial`
+   `docker run -d --name fastapi-server -p 9001:9001 fastapi:initial`
 
 ### Deploying Dockerized server onto Cloud Foundry
 

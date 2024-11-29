@@ -2,7 +2,7 @@ import base64
 import os
 from pathlib import Path
 import re
-# from dotenv import load_dotenv
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,7 +12,7 @@ import cv2
 import json
 
 # Load environment variables from .env file
-# load_dotenv()
+load_dotenv()
 
 # Get secret key from .env
 # SECRET_KEY = os.getenv('SECRET_KEY')
@@ -101,4 +101,5 @@ async def check(request: Request):
 	
 if __name__ == "__main__":
     import uvicorn
+    print('Deepface home directory:', os.environ['DEEPFACE_HOME'])
     uvicorn.run(app, host="0.0.0.0", port=9001)
