@@ -5,7 +5,7 @@ import cv2
 import numpy as np
 import json
 from dotenv import load_dotenv
-from face_api import check_face, format_base64_for_opencv
+from face_api import check_face, format_base64_for_opencv, resize_with_aspect_ratio
 
 # Load environment variables from .env file
 load_dotenv()
@@ -51,6 +51,37 @@ def check_face_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     
+@app.route('/check-face-new', methods=['POST'])
+def check():
+    try:
+        # Get query parameter for resizing
+        resize = request.args.get('resize', 'true').lower() == 'true'
+
+        # Check if a file is included in the request
+        if 'file' not in request.files:
+            return jsonify({"error": "Missing 'file' parameter"}), 400
+
+        # Read the uploaded file
+        file = request.files['file']
+        file_bytes = file.read()
+
+        # Convert file bytes to numpy array and decode image
+        im_arr = np.frombuffer(file_bytes, dtype=np.uint8)
+        img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+        if img is None:
+            raise ValueError("Invalid image format")
+
+        # Optionally resize the image
+        if resize:
+            img = resize_with_aspect_ratio(img, 640, 480)
+
+        # Call face-checking logic
+        potential_ids_of_person = check_face(img)
+        return jsonify({"potential_ids": potential_ids_of_person})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=9001, ssl_context=('./app/https_certs/cert.crt', './app/https_certs/cert.key'))

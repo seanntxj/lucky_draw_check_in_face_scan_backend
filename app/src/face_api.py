@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 import re
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, File, Query, Request, UploadFile
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from deepface import DeepFace
@@ -37,6 +37,26 @@ def format_base64_for_opencv(input_string):
         return str(input_string[match.start():]).replace("base64,", "")
     else:
         return input_string
+
+def resize_with_aspect_ratio(image, target_width, target_height):
+    """Resize image to fit within target dimensions while maintaining aspect ratio and adding black padding."""
+    h, w = image.shape[:2]
+    scale = min(target_width / w, target_height / h)
+    new_w, new_h = int(w * scale), int(h * scale)
+
+    # Resize the image
+    resized_image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_AREA)
+
+    # Create a black canvas of the target size
+    result = np.zeros((target_height, target_width, 3), dtype=np.uint8)
+
+    # Calculate padding to center the image
+    top = (target_height - new_h) // 2
+    left = (target_width - new_w) // 2
+
+    # Place the resized image onto the canvas
+    result[top:top + new_h, left:left + new_w] = resized_image
+    return result
 
 def check_face(frame):
     potential_ids_of_person = []
@@ -96,6 +116,30 @@ async def check(request: Request):
     
     except json.JSONDecodeError:
         return JSONResponse({"error": "Invalid JSON"}, status_code=400)
+    except Exception as e:
+        return JSONResponse({"error": str(e)}, status_code=500)
+    
+@app.post("/check-face-new")
+async def check_new(file: UploadFile = File(...), resize: bool = Query(default=True)):
+    try:
+        # Read the uploaded file's contents
+        file_bytes = await file.read()
+        
+        # Convert file bytes to numpy array and decode image
+        im_arr = np.frombuffer(file_bytes, dtype=np.uint8)
+        img = cv2.imdecode(im_arr, flags=cv2.IMREAD_COLOR)
+
+        if img is None:
+            raise ValueError("Invalid image format")
+        
+        # Optionally resize the image
+        if resize:
+            img = resize_with_aspect_ratio(img, 640, 480)
+
+        # Call your face-checking logic
+        potential_ids_of_person = check_face(img)
+        return {"potential_ids": potential_ids_of_person}
+
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
 	
