@@ -75,7 +75,57 @@ And on the host machine, the console should show a successful connection.
 Place the API link into the Settings page of the front end app and test.
 ![successful_local_area_network_connection_on_frontend](image/README/successful_local_area_network_connection_on_frontend.png)
 
-### Troubleshooting
+## CloudFlare setup
+
+### 1. Install the CloudFlared connector. 
+
+### 2. Login with CloudFlared with 
+`cloudflared login`
+
+### 3. Activate the service tunnel 
+![cloudflare_connect](image/README/cloudflare_connect.png)
+
+### 4. Ensure connectivity 
+Either use the command line:
+![cloudflare_connected_cmd](image/README/cloudflare_connected_cmd.png)
+
+Or check on the CloudFlare Admin portal: 
+![cloudflare_connected_webui](image/README/cloudflare_connected_webui.png)
+
+## CloudFlare cleanup
+
+### 1. Stop the cloudflared Service
+
+Since we've installed it as a service, we need to stop it using our system's service manager.
+On Systemd-based Systems (e.g., Arch Linux):
+
+Run the following command:
+
+`sudo systemctl stop cloudflared`
+
+This will stop the cloudflared service and, consequently, any active tunnels.
+### 2. Disable the Service (Optional)
+
+If you don’t want the service to restart on boot:
+
+`sudo systemctl disable cloudflared`
+
+### 3. Check the Status
+
+To confirm that the service and tunnel are stopped:
+
+`sudo systemctl status cloudflared`
+
+It should show that the service is inactive or stopped.
+### 4. Uninstall the Service (Optional)
+
+If you no longer need the cloudflared service and want to clean up:
+
+`sudo cloudflared service uninstall`
+
+This will remove the service configuration but will not delete cloudflared itself.
+
+# Troubleshooting
 
 - **ERR_CERT_AUTHORITY_INVALID error when using the frontend**
 You have skipped or need to retry step 3.
