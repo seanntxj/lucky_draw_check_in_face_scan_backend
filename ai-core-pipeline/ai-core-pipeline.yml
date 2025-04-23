@@ -1,49 +1,34 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: face-recognition-serve
+  name: sean-face-scan-server
   annotations:
-    scenarios.ai.sap.com/description: "Face recognition"
-    scenarios.ai.sap.com/name: "face-recognition2"
-    executables.ai.sap.com/description: "Face recognition serving executable"
-    executables.ai.sap.com/name: "server"
-    artifacts.ai.sap.com/facialmodel.kind: "model" # Suggest the kind of artifact to input.
+    scenarios.ai.sap.com/description: "Face recognition backend server"
+    scenarios.ai.sap.com/name: "sean-face-scan-server"
+    executables.ai.sap.com/description: "Face recognition backend server"
+    executables.ai.sap.com/name: "sean-face-scan-server"
   labels:
-    scenarios.ai.sap.com/id: "face-recognition"
-    ai.sap.com/version: "16.0.0"
+    scenarios.ai.sap.com/id: "sean-face-scan-server"
+    ai.sap.com/version: "0.1.0"
 spec:
-  inputs:
-    artifacts:
-      - name: facialRecognitionModel
-    parameters:
-      - name: greetmessage # placeholder name
-        type: string # required for every parameters
   template:
     apiVersion: "serving.kserve.io/v1beta1"
     metadata:
       annotations: |
-        autoscaling.knative.dev/metric: concurrency   # condition when to scale
+        autoscaling.knative.dev/metric: concurrency
         autoscaling.knative.dev/target: 1
         autoscaling.knative.dev/targetBurstCapacity: 0
       labels: |
-        ai.sap.com/resourcePlan: infer.l
+        ai.sap.com/resourcePlan: infer.s
     spec: |
       predictor:
         imagePullSecrets:
-          - name: fastapi
+        - name: sean-personal-dockerhub
         minReplicas: 1
-        maxReplicas: 5    # how much to scale
+        maxReplicas: 1
         containers:
-        - name: kfserving-container
-          image: "docker.io/seanxjtan/fastapi:initial"
+        - name: kserve-container
+          image: docker.io/seanxjtan/fastapi:initial
           ports:
-            - containerPort: 9001    # customizable port
+            - containerPort: 9001
               protocol: TCP
-          command: ["/bin/sh", "-c"]
-          args:
-            - "python /app/src/face_api.py"
-          env:
-            - name: STORAGE_URI # Required
-              value: "{{inputs.artifacts.facialRecognitionModel}}" # Required reference from artifact name, see above
-            - name: greetingmessage # different name to avoid confusion
-              value: "{{inputs.parameters.greetmessage}}"

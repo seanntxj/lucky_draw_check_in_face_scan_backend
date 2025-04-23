@@ -144,7 +144,7 @@ You need to allow the ports `9001` (or if you changed it whatever you used) thro
    - Download weights `retinaface.h5` and `facenet512_weights.h5` from [here](https://github.com/serengil/deepface_models/releases/tag/v1.0) into `app/.deepface/weights`
      ![1732809417377](image/README/1732809417377.png)
 2. **Build the docker image**
-   `docker build -t fastapi:initial .`
+   `docker build --platform=linux/amd64 -t fastapi:initial .`
 3. **Run the docker image locally**
    `docker run -d --name fastapi-server -p 9001:9001 fastapi:initial`
 
