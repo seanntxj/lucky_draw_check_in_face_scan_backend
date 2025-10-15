@@ -87,11 +87,11 @@ def check_face(frame):
 def base():
     return "On"
 
-@app.get("/v2/status")
+@app.get("/status")
 def status():
     return "On"
 
-@app.post("/v2/check-face")
+@app.post("/check-face")
 async def check(request: Request):
     try:
         body = await request.json()
@@ -119,7 +119,7 @@ async def check(request: Request):
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=500)
     
-@app.post("/v2/check-face-new")
+@app.post("/check-face-new")
 async def check_new(file: UploadFile = File(...), resize: bool = Query(default=True)):
     try:
         # Read the uploaded file's contents
