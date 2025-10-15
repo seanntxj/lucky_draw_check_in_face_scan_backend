@@ -9,7 +9,7 @@ metadata:
     executables.ai.sap.com/name: "sean-face-scan-server"
   labels:
     scenarios.ai.sap.com/id: "sean-face-scan-server"
-    ai.sap.com/version: "0.1.0"
+    ai.sap.com/version: "0.2.1"
 spec:
   template:
     apiVersion: "serving.kserve.io/v1beta1"
@@ -19,16 +19,23 @@ spec:
         autoscaling.knative.dev/target: 1
         autoscaling.knative.dev/targetBurstCapacity: 0
       labels: |
-        ai.sap.com/resourcePlan: infer.s
+        ai.sap.com/resourcePlan: starter
     spec: |
       predictor:
         imagePullSecrets:
-        - name: sean-personal-dockerhub
+        - name: credstutorialrepo # your docker registry secret
         minReplicas: 1
         maxReplicas: 1
         containers:
         - name: kserve-container
-          image: docker.io/seanxjtan/fastapi:initial
+          image: docker.io/chewkxmy/facescan:02
           ports:
             - containerPort: 9001
               protocol: TCP
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              uvicorn src.face_api:app --host 0.0.0.0 --port 9001
+          env:
+            - name: HOME
+              value: "/app"

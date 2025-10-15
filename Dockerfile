@@ -2,12 +2,13 @@ FROM python:3.11
 
 RUN apt-get update && apt-get install -y libgl1-mesa-dev
 
-COPY /app /app
-COPY /requirements.txt /app/src/
+WORKDIR /app
 
-RUN pip install --no-cache-dir -r /app/src/requirements.txt
+COPY . /app
 
-RUN chmod -R 777 /app
+RUN pip install --no-cache-dir -r requirements.txt
+
+RUN mkdir -p /app/.deepface && chmod -R 755 /app
 
 EXPOSE 9001
 
