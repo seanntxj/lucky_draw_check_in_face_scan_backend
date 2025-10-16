@@ -1,15 +1,15 @@
 apiVersion: ai.sap.com/v1alpha1
 kind: ServingTemplate
 metadata:
-  name: sean-face-scan-server
+  name: facescanforthtry
   annotations:
-    scenarios.ai.sap.com/description: "Face recognition backend server"
-    scenarios.ai.sap.com/name: "sean-face-scan-server"
-    executables.ai.sap.com/description: "Face recognition backend server"
-    executables.ai.sap.com/name: "sean-face-scan-server"
+    scenarios.ai.sap.com/description: "Face recognition backend server 4th try"
+    scenarios.ai.sap.com/name: "sean-face-scan-server-4th"
+    executables.ai.sap.com/description: "Face recognition backend server forth try"
+    executables.ai.sap.com/name: "sean-face-scan-server-4th"
   labels:
-    scenarios.ai.sap.com/id: "sean-face-scan-server"
-    ai.sap.com/version: "0.1.0"
+    scenarios.ai.sap.com/id: "sean-face-scan-server-4th"
+    ai.sap.com/version: "1.5"
 spec:
   template:
     apiVersion: "serving.kserve.io/v1beta1"
@@ -19,16 +19,24 @@ spec:
         autoscaling.knative.dev/target: 1
         autoscaling.knative.dev/targetBurstCapacity: 0
       labels: |
-        ai.sap.com/resourcePlan: infer.s
+        ai.sap.com/resourcePlan: starter
     spec: |
       predictor:
         imagePullSecrets:
-        - name: sean-personal-dockerhub
+        - name: credstutorialrepo # your docker registry secret
         minReplicas: 1
         maxReplicas: 1
         containers:
         - name: kserve-container
-          image: docker.io/seanxjtan/fastapi:initial
+          image: docker.io/chewkxmy/facescan:05
+          workingDir: /app
           ports:
             - containerPort: 9001
               protocol: TCP
+          command: ["/bin/sh", "-c"]
+          args:
+            - >
+              uvicorn app.src.face_api:app --host 0.0.0.0 --port 9001
+          env:
+            - name: HOME
+              value: "/app"
